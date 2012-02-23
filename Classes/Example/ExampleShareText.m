@@ -26,6 +26,8 @@
 #import "ExampleShareText.h"
 #import "SHKItem.h"
 #import "SHKActionSheet.h"
+#import "SHKSinaWeibo.h"
+#import "SHKQQWeibo.h"
 
 @implementation ExampleShareText
 
@@ -63,6 +65,12 @@
 	textView.editable = NO;
 	
 	[textView release];
+
+    
+    SHKQQWeibo* qqWeibo = [[SHKQQWeibo alloc]init];
+    if ([qqWeibo isAuthorized]) {
+        [qqWeibo fetchImageUrlWithDeleate:self];
+    }
 }
 
 - (void)share
@@ -85,6 +93,10 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation 
 {
     return YES;
+}
+
+- (NSString*)didFinishGetQQImageUrl:(NSString*)imageUrl {
+    NSLog(@"In didFinishGetQQImageUrl: %@", imageUrl);
 }
 
 

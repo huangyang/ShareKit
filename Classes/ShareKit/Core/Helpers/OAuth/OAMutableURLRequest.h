@@ -65,6 +65,9 @@ signatureProvider:(id<OASignatureProviding, NSObject>)aProvider
 
 - (void)prepare;
 
+- (NSString *)txBaseString;
+- (NSString *)txPhotoBaseString;
+
 - (void)setOAuthParameterName:(NSString*)parameterName withValue:(NSString*)parameterValue;
 - (void)setOAuthBaseStringParameterName:(NSString*)parameterName withValue:(NSString*)parameterValue;
 

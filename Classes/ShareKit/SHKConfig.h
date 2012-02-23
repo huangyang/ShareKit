@@ -32,10 +32,15 @@
 // Chinese Service 
 //////////////////////////
 
+//QQ Weibo
+#define SHKQQWeiboConsumerKey   @"801094904"     // The consumer key
+#define SHKQQWeiboSecretKey     @"bb613c32c68fcbf1aad8b276411a9c83"     // The secret key
+#define SHKQQWeiboCallbackUrl   @"null"     // The user defined callback url
+
 // Sina Weibo 
-#define SHKSinaWeiboConsumerKey         @""	// The consumer key
-#define SHKSinaWeiboConsumerSecret      @""	// The secret key
-#define SHKSinaWeiboCallbackUrl         @""	// You need to set this if using OAuth (MUST be set, it could be any words)
+#define SHKSinaWeiboConsumerKey         @"3067506986"	// The consumer key
+#define SHKSinaWeiboConsumerSecret      @"287bad01fe211fa2c9289754cea88dbb"	// The secret key
+#define SHKSinaWeiboCallbackUrl         @"null"	// You need to set this if using OAuth (MUST be set, it could be any words)
 #define SHKSinaWeiboUseXAuth            0   // To use xAuth, set to 1
 #define SHKSinaWeiboScreenName          @"" // Enter your sina weibo screen name (Only for xAuth)
 #define SHKSinaWeiboUserID              @"" // Enter your app's sina weibo account if you'd like to ask the user to follow it when logging in. (Only for xAuth)
@@ -171,6 +176,7 @@
  ------
  To show debug output in the console, define _SHKDebugShowLogs somewhere.
  */
+#define _SHKDebugShowLogs
 #ifdef _SHKDebugShowLogs
 	#define SHKDebugShowLogs			1
 	#define SHKLog( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )

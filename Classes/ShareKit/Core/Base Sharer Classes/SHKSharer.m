@@ -635,6 +635,7 @@
 
 - (BOOL)tryToSend
 {
+    NSLog(@"Try to send");
 	if (![[self class] shareRequiresInternetConnection] || [SHK connected])
 		return [self send];
 	

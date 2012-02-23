@@ -87,6 +87,8 @@
 		43C91DF511EBAE4800F31FAE /* SHKTumblr.m in Sources */ = {isa = PBXBuildFile; fileRef = 43C91DF411EBAE4800F31FAE /* SHKTumblr.m */; };
 		43D1DEF011D5CDD200550D75 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43D1DEEF11D5CDD200550D75 /* SystemConfiguration.framework */; };
 		43EF406E11D3FFF800B1F700 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43EF406D11D3FFF800B1F700 /* Security.framework */; };
+		8410160714E8B5B9008B6F5E /* SHKQQWeibo.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410160414E8B5B9008B6F5E /* SHKQQWeibo.m */; };
+		8410160814E8B5B9008B6F5E /* SHKQQWeiboForm.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410160614E8B5B9008B6F5E /* SHKQQWeiboForm.m */; };
 		8563E284125C8512002D729F /* SHKEvernote.m in Sources */ = {isa = PBXBuildFile; fileRef = 8563E283125C8512002D729F /* SHKEvernote.m */; };
 		8563E342125C884A002D729F /* NSData+md5.m in Sources */ = {isa = PBXBuildFile; fileRef = 8563E341125C884A002D729F /* NSData+md5.m */; };
 		8563E43A125C8D1E002D729F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8563E436125C8D1E002D729F /* Localizable.strings */; };
@@ -323,6 +325,10 @@
 		43C91DF411EBAE4800F31FAE /* SHKTumblr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHKTumblr.m; sourceTree = "<group>"; };
 		43D1DEEF11D5CDD200550D75 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		43EF406D11D3FFF800B1F700 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		8410160314E8B5B9008B6F5E /* SHKQQWeibo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHKQQWeibo.h; sourceTree = "<group>"; };
+		8410160414E8B5B9008B6F5E /* SHKQQWeibo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHKQQWeibo.m; sourceTree = "<group>"; };
+		8410160514E8B5B9008B6F5E /* SHKQQWeiboForm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHKQQWeiboForm.h; sourceTree = "<group>"; };
+		8410160614E8B5B9008B6F5E /* SHKQQWeiboForm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHKQQWeiboForm.m; sourceTree = "<group>"; };
 		8563E282125C8512002D729F /* SHKEvernote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHKEvernote.h; sourceTree = "<group>"; };
 		8563E283125C8512002D729F /* SHKEvernote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHKEvernote.m; sourceTree = "<group>"; };
 		8563E340125C884A002D729F /* NSData+md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+md5.h"; sourceTree = "<group>"; };
@@ -790,6 +796,7 @@
 		43A536C011DBE3B9004A1712 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				8410160214E8B5B9008B6F5E /* QQWeibo */,
 				ACA4833D1343679900A03B1F /* Sina Weibo */,
 				ACA8F4731345E3E80058C93D /* Douban */,
 				AC8D84091472B55A00699D99 /* Renren */,
@@ -963,6 +970,17 @@
 				8563E436125C8D1E002D729F /* Localizable.strings */,
 			);
 			name = Localization;
+			sourceTree = "<group>";
+		};
+		8410160214E8B5B9008B6F5E /* QQWeibo */ = {
+			isa = PBXGroup;
+			children = (
+				8410160314E8B5B9008B6F5E /* SHKQQWeibo.h */,
+				8410160414E8B5B9008B6F5E /* SHKQQWeibo.m */,
+				8410160514E8B5B9008B6F5E /* SHKQQWeiboForm.h */,
+				8410160614E8B5B9008B6F5E /* SHKQQWeiboForm.m */,
+			);
+			path = QQWeibo;
 			sourceTree = "<group>";
 		};
 		8563E281125C8512002D729F /* Evernote */ = {
@@ -1497,6 +1515,8 @@
 				AC3DC96C148BCE5300E9AD3C /* SHKNetEaseWeibo.m in Sources */,
 				AC3DC96D148BCE5300E9AD3C /* SHKNetEaseWeiboForm.m in Sources */,
 				ACE55A5D149230390091748B /* SHKTextMessage.m in Sources */,
+				8410160714E8B5B9008B6F5E /* SHKQQWeibo.m in Sources */,
+				8410160814E8B5B9008B6F5E /* SHKQQWeiboForm.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

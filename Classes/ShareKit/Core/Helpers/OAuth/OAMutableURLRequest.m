@@ -215,6 +215,11 @@ signatureProvider:(id<OASignatureProviding, NSObject>)aProvider
     nonce = (NSString *)string;
 }
 
+- (NSString *)generateNonce {
+	// Just a simple implementation of a random number between 123400 and 9999999
+	return [NSString stringWithFormat:@"%u", arc4random() % (9999999 - 123400) + 123400];
+}
+
 - (NSString *)_signatureBaseString
 {
     // OAuth Spec, Section 9.1.1 "Normalize Request Parameters"
@@ -262,5 +267,128 @@ signatureProvider:(id<OASignatureProviding, NSObject>)aProvider
 	
 	return ret;
 }
+
+
+- (NSString *)txBaseString
+{
+    NSArray *parameters = [self parameters];
+    
+    
+    // OAuth Spec, Section 9.1.1 "Normalize Request Parameters"
+    // build a sorted array of both request parameters and OAuth header parameters
+    NSMutableArray *parameterPairs = [NSMutableArray  arrayWithCapacity:(6 + [parameters count])]; // 6 being the number of OAuth params in the Signature Base String
+    
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_consumer_key" value:consumer.key] URLEncodedNameValuePair]];
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_signature_method" value:[signatureProvider name]] URLEncodedNameValuePair]];
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_timestamp" value:timestamp] URLEncodedNameValuePair]];
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_nonce" value:[self generateNonce]] URLEncodedNameValuePair]];
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_version" value:@"1.0"] URLEncodedNameValuePair]];
+    //    [parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_callback" value:CallBackURL] URLEncodedNameValuePair]];
+    
+    //    [parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_signature" value:_signature] URLEncodedNameValuePair]];
+    
+    if (![token.key isEqualToString:@""]) {
+        [parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_token" value:token.key] URLEncodedNameValuePair]];
+    }
+	if (token.sessionHandle.length > 0) [parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_verifier" value:token.sessionHandle] URLEncodedNameValuePair]];		//added for the Twitter OAuth implementation
+    
+    for (OARequestParameter *param in parameters) {
+        [parameterPairs addObject:[param URLEncodedNameValuePair]];
+    }
+    
+    //    NSLog(@"%@,%@",parameters,parameterPairs);
+    
+    NSArray *sortedPairs = [parameterPairs sortedArrayUsingSelector:@selector(compare:)];
+    NSString *normalizedRequestParameters = [sortedPairs componentsJoinedByString:@"&"];
+    // OAuth Spec, Section 9.1.2 "Concatenate Request Elements"
+    NSString *ret = [NSString stringWithFormat:@"%@",
+					 normalizedRequestParameters];
+    
+    NSString *txret = [NSString stringWithFormat:@"%@&%@&%@",
+                       [self HTTPMethod],
+                       [[[self URL] URLStringWithoutQuery] URLEncodedString],
+                       [normalizedRequestParameters URLEncodedString]];
+    //	NSLog(@"base string:%@",txret);
+    // NSLog(@"norma
+    
+    NSString *signClearText = txret;
+	NSString *secret = [NSString stringWithFormat:@"%@&%@",
+						[consumer.secret URLEncodedString],
+						[token.secret URLEncodedString]];
+    NSString *_signature = [signatureProvider signClearText:signClearText
+                                                 withSecret:secret];
+    
+    return [NSString stringWithFormat:@"%@&oauth_signature=%@",ret,[_signature URLEncodedString]];
+}
+
+- (NSString *)txPhotoBaseString
+{
+    NSArray *parameters = [self parameters];
+    
+    
+    // OAuth Spec, Section 9.1.1 "Normalize Request Parameters"
+    // build a sorted array of both request parameters and OAuth header parameters
+    NSMutableArray *parameterPairs = [NSMutableArray  arrayWithCapacity:(6 + [parameters count])]; // 6 being the number of OAuth params in the Signature Base String
+    
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_consumer_key" value:consumer.key] URLEncodedNameValuePair]];
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_signature_method" value:[signatureProvider name]] URLEncodedNameValuePair]];
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_timestamp" value:timestamp] URLEncodedNameValuePair]];
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_nonce" value:[self generateNonce]] URLEncodedNameValuePair]];
+	[parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_version" value:@"1.0"] URLEncodedNameValuePair]];
+    //    [parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_callback" value:CallBackURL] URLEncodedNameValuePair]];
+    
+    //    [parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_signature" value:_signature] URLEncodedNameValuePair]];
+    
+    if (![token.key isEqualToString:@""]) {
+        [parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_token" value:token.key] URLEncodedNameValuePair]];
+    }
+	if (token.sessionHandle.length > 0) [parameterPairs addObject:[[OARequestParameter requestParameterWithName:@"oauth_verifier" value:token.sessionHandle] URLEncodedNameValuePair]];		//added for the Twitter OAuth implementation
+    
+    for (OARequestParameter *param in parameters) {
+        [parameterPairs addObject:[param URLEncodedNameValuePair]];
+    }
+    
+    //    NSLog(@"%@,%@",parameters,parameterPairs);
+    
+    NSArray *sortedPairs = [parameterPairs sortedArrayUsingSelector:@selector(compare:)];
+    NSMutableString *normalizedRequestParameters = [[[NSMutableString alloc] init] autorelease];
+    
+    NSString *boundary = @"WBShareKit";
+    NSString *boundarystr = [NSString stringWithFormat:@"\r\n--%@\r\n", boundary];
+    NSString *formDataTemplate = @"\r\n--%@\r\nContent-Disposition: form-data; name=\"%@\"\r\n\r\n%@";
+    for (NSString *str in sortedPairs) {
+        NSArray *arr = [str componentsSeparatedByString:@"="];
+        NSString *value = [arr lastObject];
+        NSString *key = [arr objectAtIndex:0];
+        NSString *formItem = [NSString stringWithFormat:formDataTemplate, boundary, key, value];
+        [normalizedRequestParameters appendString:formItem];
+        
+    }
+    [normalizedRequestParameters appendString:boundarystr];
+    // OAuth Spec, Section 9.1.2 "Concatenate Request Elements"
+    //    NSString *ret = [NSString stringWithFormat:@"%@",
+    //					 normalizedRequestParameters];
+    //    
+    NSString *txret = [NSString stringWithFormat:@"%@&%@&%@",
+                       [self HTTPMethod],
+                       [[[self URL] URLStringWithoutQuery] URLEncodedString],
+                       [normalizedRequestParameters URLEncodedString]];
+    //	NSLog(@"base string:%@",txret);
+    // NSLog(@"norma
+    
+    NSString *signClearText = txret;
+	NSString *secret = [NSString stringWithFormat:@"%@&%@",
+						[consumer.secret URLEncodedString],
+						[token.secret URLEncodedString]];
+    NSString *_signature = [signatureProvider signClearText:signClearText
+                                                 withSecret:secret];
+    
+    NSString *formItem = [NSString stringWithFormat:formDataTemplate, boundary, @"oauth_signature", [_signature URLEncodedString]];
+    [normalizedRequestParameters appendString:formItem];
+    [normalizedRequestParameters appendString:boundarystr];
+    
+    return normalizedRequestParameters;
+}
+
 
 @end

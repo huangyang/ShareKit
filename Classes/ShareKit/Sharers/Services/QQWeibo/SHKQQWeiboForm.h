@@ -1,5 +1,5 @@
 //
-//  SHKSinaWeibo.h
+//  SHKSinaWeiboForm.h
 //  ShareKit
 //
 //  Created by icyleaf on 11-03-31.
@@ -26,40 +26,22 @@
 //
 //
 
-#import <Foundation/Foundation.h>
-#import "SHKOAuthSharer.h"
-#import "SHKSinaWeiboForm.h"
+#import <UIKit/UIKit.h>
 
-@interface SHKSinaWeibo : SHKOAuthSharer 
+
+@interface SHKQQWeiboForm : UIViewController <UITextViewDelegate>
 {
-    BOOL xAuth;		
+	id delegate;
+	UITextView *textView;
+	UILabel *counter;
+	BOOL hasAttachment;
 }
-    
-@property BOOL xAuth;
 
-#pragma mark -
-#pragma mark UI Implementation
-    
-- (void)showSinaWeiboForm;
-    
-#pragma mark -
-#pragma mark Share API Methods
+@property (nonatomic, retain) id delegate;
+@property (nonatomic, retain) UITextView *textView;
+@property (nonatomic, retain) UILabel *counter;
+@property BOOL hasAttachment;
 
-- (void)shortenURL;
-- (void)shortenURLFinished:(SHKRequest *)aRequest;
-    
-- (void)sendForm:(SHKSinaWeiboForm *)form;
-    
-- (void)sendStatus;
-- (void)sendStatusTicket:(OAServiceTicket *)ticket didFinishWithData:(NSData *)data;
-- (void)sendStatusTicket:(OAServiceTicket *)ticket didFailWithError:(NSError*)error;
-
-- (void)sendImage;
-- (void)sendImageTicket:(OAServiceTicket *)ticket didFinishWithData:(NSData *)data;
-- (void)sendImageTicket:(OAServiceTicket *)ticket didFailWithError:(NSError*)error;
-    
-- (void)followMe;
+- (void)layoutCounter;
 
 @end
-
-

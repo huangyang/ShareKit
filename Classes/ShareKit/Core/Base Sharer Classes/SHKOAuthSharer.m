@@ -86,6 +86,18 @@
 																
 	
 	[oRequest setHTTPMethod:@"POST"];
+    
+    if ([[self sharerTitle] rangeOfString:@"QQWeibo"].location != NSNotFound) {
+    
+        [oRequest setParameters:[NSArray arrayWithObject:[OARequestParameter requestParameterWithName:@"oauth_callback" value:SHKQQWeiboCallbackUrl]]];
+    
+    
+        NSString *url = [NSString stringWithFormat:@"%@?oauth_callback=%@&%@",@"https://open.t.qq.com/cgi-bin/request_token",[SHKQQWeiboCallbackUrl URLEncodedString],[oRequest txBaseString]];
+    
+        [oRequest setURL:[NSURL URLWithString:url]];
+    }
+    
+//    NSLog(@"%@", oRequest.URL.description);
 	
 	[self tokenRequestModifyRequest:oRequest];
 	
@@ -116,7 +128,6 @@
 													   encoding:NSUTF8StringEncoding];
 		self.requestToken = [[OAToken alloc] initWithHTTPResponseBody:responseBody];
 		[responseBody release];
-		
 		[self tokenAuthorize];
 	}
 	
@@ -149,7 +160,6 @@
                                     [authorizeCallbackURL absoluteString]]];
     }
     
-	
 	SHKOAuthView *auth = [[SHKOAuthView alloc] initWithURL:url delegate:self];
 	[[SHK currentHelper] showViewController:auth];	
 	[auth release];
@@ -157,6 +167,7 @@
 
 - (void)tokenAuthorizeView:(SHKOAuthView *)authView didFinishWithSuccess:(BOOL)success queryParams:(NSMutableDictionary *)queryParams error:(NSError *)error;
 {
+    NSLog(@"InTokenAuthorizeView");
 	[[SHK currentHelper] hideCurrentViewControllerAnimated:YES];
 	
 	if (!success)
@@ -201,6 +212,17 @@
                                                           signatureProvider:signatureProvider]; // use the default method, HMAC-SHA1
 	
     [oRequest setHTTPMethod:@"POST"];
+    
+    if ([[self sharerTitle] rangeOfString:@"QQWeibo"].location != NSNotFound) {
+        [oRequest setParameters:[NSArray arrayWithObject:[OARequestParameter requestParameterWithName:@"oauth_verifier" value:[self.authorizeResponseQueryVars valueForKey:@"v"]]]];
+        NSString *url = [NSString stringWithFormat:@"%@?oauth_verifier=%@&%@", @"https://open.t.qq.com/cgi-bin/access_token",[self.authorizeResponseQueryVars valueForKey:@"v"],[oRequest txBaseString]];
+    
+        [oRequest setURL:[NSURL URLWithString:url]];
+        NSLog(@"url: %@", url);
+        NSLog(@"Access url %@", oRequest.URL.description);
+
+    }
+    
 	
 	[self tokenAccessModifyRequest:oRequest];
 	

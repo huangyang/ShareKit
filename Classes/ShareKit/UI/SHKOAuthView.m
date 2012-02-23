@@ -79,9 +79,26 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {		
-	if ([request.URL.absoluteString rangeOfString:@"authorize"].location == NSNotFound
-        && [request.URL.absoluteString rangeOfString:@"authenticate"].location == NSNotFound
-        && [request.URL.absoluteString rangeOfString:[delegate authorizeCallbackURL].absoluteString].location != NSNotFound)
+    NSLog(@"shouldStartLoadWithRequest");
+    NSLog(@"request.URL.absoluteString: %@", request.URL.absoluteString);
+    NSLog(@"request.URL.query: %@", request.URL.query);
+    
+    bool hasAuthorized;
+    if ([[delegate sharerTitle] rangeOfString:@"QQWeibo"].location != NSNotFound) {
+        hasAuthorized = [request.URL.absoluteString rangeOfString:@"authenticate"].location == NSNotFound
+        && [request.URL.absoluteString rangeOfString:[delegate authorizeCallbackURL].absoluteString].location == NSNotFound && request.URL.query != nil;
+    } else {
+        hasAuthorized = [request.URL.absoluteString rangeOfString:@"authorize"].location == NSNotFound
+                && [request.URL.absoluteString rangeOfString:@"authenticate"].location == NSNotFound
+                && [request.URL.absoluteString rangeOfString:[delegate authorizeCallbackURL].absoluteString].location != NSNotFound;
+    }
+    
+//	if ([request.URL.absoluteString rangeOfString:@"authorize"].location == NSNotFound
+//        && [request.URL.absoluteString rangeOfString:@"authenticate"].location == NSNotFound
+//        && [request.URL.absoluteString rangeOfString:[delegate authorizeCallbackURL].absoluteString].location != NSNotFound)
+//    if ([request.URL.absoluteString rangeOfString:@"authenticate"].location == NSNotFound
+//                && [request.URL.absoluteString rangeOfString:[delegate authorizeCallbackURL].absoluteString].location == NSNotFound && request.URL.query != nil)
+    if (hasAuthorized)
 	{
 		// Get query
 		NSMutableDictionary *queryParams = nil;
@@ -97,7 +114,7 @@
 					[queryParams setObject:[parts objectAtIndex:1] forKey:[parts objectAtIndex:0]];
 			}
 		}
-		
+		NSLog(@"In didFinishWithSuccess:YES");
 		[delegate tokenAuthorizeView:self didFinishWithSuccess:YES queryParams:queryParams error:nil];
 		self.delegate = nil;
 		
@@ -161,5 +178,7 @@
 	[delegate tokenAuthorizeCancelledView:self];
 	[[SHK currentHelper] hideCurrentViewControllerAnimated:YES];
 }
+
+
 
 @end

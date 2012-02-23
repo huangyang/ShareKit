@@ -26,6 +26,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SHKQQWeibo.h"
 
 
 @interface ExampleShareText : UIViewController 

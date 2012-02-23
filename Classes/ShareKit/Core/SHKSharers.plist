@@ -12,6 +12,7 @@
 	</array>
 	<key>services</key>
 	<array>
+		<string>SHKQQWeibo</string>
 		<string>SHKSinaWeibo</string>
 		<string>SHKDouban</string>
 		<string>SHKRenRen</string>

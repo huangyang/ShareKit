@@ -27,6 +27,7 @@
 //
 
 #import "SHKSinaWeibo.h"
+#import "JSON.h"
 
 #define API_DOMAIN  @"http://api.t.sina.com.cn"
 
@@ -315,6 +316,7 @@
 - (BOOL)send
 {	
 	// Check if we should send follow request too
+        
 	if (xAuth && [item customBoolForSwitchKey:@"followMe"])
 		[self followMe];	
 	
