@@ -6,3 +6,5 @@
 *.mode1v3
 build
 .DS_Store
+
+Classes/ShareKit/SHKConfig.h
